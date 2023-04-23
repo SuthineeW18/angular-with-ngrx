@@ -28,52 +28,6 @@ export class AuthService {
       private router: Router,
       private store: Store<fromApp.AppState>
       ) {}
-
-    signup(email: string, password: string) {
-        return this.http
-          .post<AuthResponseData>(
-            'https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBIhCFj0XlMjpkTWxijm334m3OEP69GECw',
-            {
-              email: email,
-              password: password,
-              returnSecureToken: true
-            }
-          )
-          .pipe(
-            catchError(this.handleError),
-            tap((resData: AuthResponseData) => {
-              this.handleAuthentication(
-                resData.email,
-                resData.localId,
-                resData.idToken,
-                +resData.expiresIn
-              );
-            })
-          );
-      }
-
-      login(email: string, password: string) {
-        return this.http
-          .post<AuthResponseData>(
-            'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyBIhCFj0XlMjpkTWxijm334m3OEP69GECw',
-            {
-              email: email,
-              password: password,
-              returnSecureToken: true
-            }
-          )
-          .pipe(
-            catchError(this.handleError),
-            tap((resData: AuthResponseData) => {
-              this.handleAuthentication(
-                resData.email,
-                resData.localId,
-                resData.idToken,
-                +resData.expiresIn
-              );
-            })
-          );
-      }
     
       autoLogin() {
         const userData: {
@@ -95,7 +49,7 @@ export class AuthService {
     
         if (loadedUser.token) {
           this.store.dispatch(
-            new AuthActions.Login({
+            new AuthActions.AuthenticateSuccess({
               email: loadedUser.email,
               userId: loadedUser.id,
               token: loadedUser.token,
@@ -136,7 +90,7 @@ export class AuthService {
         const user = new User(email, userId, token, expirationDate);
         // this.user.next(user);
         this.store.dispatch(
-          new AuthActions.Login({
+          new AuthActions.AuthenticateSuccess({
             email: email,
             userId: userId,
             token: token,
@@ -164,5 +118,18 @@ export class AuthService {
             break;
         }
         return throwError(errorMessage);
+      }
+
+      setLogoutTimer(expirationDuration: number) {
+        this.tokenExpirationTimer = setTimeout(() => {
+          this.store.dispatch(new AuthActions.Logout());
+        }, expirationDuration);
+      }
+    
+      clearLogoutTimer() {
+        if (this.tokenExpirationTimer) {
+          clearTimeout(this.tokenExpirationTimer);
+          this.tokenExpirationTimer = null;
+        }
       }
 }
