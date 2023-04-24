@@ -42,7 +42,7 @@ export class StopEdit implements Action {
 }
 
 export type ShoppingListActions = 
-AddIngredient 
+| AddIngredient 
 | AddIngredients 
 | UpdateIngredient 
 | DeleteIngredient
