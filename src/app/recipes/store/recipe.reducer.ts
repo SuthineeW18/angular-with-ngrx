@@ -17,7 +17,7 @@ export function recipeReducer(
     case RecipesActions.SET_RECIPES:
       return {
         ...state,
-        recipes: [...action.payload],
+        recipes: action.payload ? [...action.payload] : [],
       };
     case RecipesActions.ADD_RECIPE:
       return {

@@ -10,11 +10,11 @@ import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
-import { AuthResponseData, AuthService } from './auth.service';
 import { Store } from '@ngrx/store';
 
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
+import { AuthResponseData } from './store/auth.effects';
 
 @Component({
   selector: 'app-auth',
