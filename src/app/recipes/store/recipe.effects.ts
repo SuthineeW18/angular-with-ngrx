@@ -10,15 +10,14 @@ import * as fromApp from '../../store/app.reducer';
 
 @Injectable()
 export class RecipeEffects {
-
   @Effect()
   fetchRecipes = this.actions$.pipe(
     ofType(RecipesActions.FETCH_RECIPES),
-    switchMap(() => { 
+    switchMap(() => {
       return this.http.get<Recipe[]>(
-      'https://ngrx-angular-9fde7-default-rtdb.asia-southeast1.firebasedatabase.app/recipes.json'     
-    )
-  }),
+        'https://prj-angular-f0727-default-rtdb.asia-southeast1.firebasedatabase.app/recipes.json'
+      );
+    }),
     map(recipes => {
       return recipes.map(recipe => {
         return {
@@ -38,7 +37,7 @@ export class RecipeEffects {
     withLatestFrom(this.store.select('recipes')),
     switchMap(([actionData, recipesState]) => {
       return this.http.put(
-        'https://ngrx-angular-9fde7-default-rtdb.asia-southeast1.firebasedatabase.app/recipes.json',
+        'https://prj-angular-f0727-default-rtdb.asia-southeast1.firebasedatabase.app//recipes.json',
         recipesState.recipes
       );
     })
